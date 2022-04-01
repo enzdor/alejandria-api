@@ -249,6 +249,14 @@ module.exports = {
         res.json(response)
     },
     edit: async (req, res) => {
+        console.log(req.body.genre);
+        console.log(req.body.genre.name);
+        if (req.body.genre.name){
+            req.body.genre = req.body.genre.name
+        }
+
+        console.log(req.body.genre);
+
         await db.Book.update(
             {...req.body},
             {where: {id: req.params.id}}

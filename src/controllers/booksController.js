@@ -192,8 +192,10 @@ module.exports = {
             req.query.priceMin = 0
         }
         if (req.query.priceMax === ''){
-            req.query.priceMin = 0
+            req.query.priceMax = 1000000
         }
+        console.log('ass');
+        console.log(req.query);
 
         const books = await db.Book.findAll({
             include: {all: true},
@@ -204,6 +206,8 @@ module.exports = {
                 price: { [Op.between]: [ Number(req.query.priceMin), Number(req.query.priceMax)]}
             }
         })
+
+        console.log(books);
 
         const response = {
             meta: {

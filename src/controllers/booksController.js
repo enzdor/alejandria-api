@@ -14,7 +14,7 @@ module.exports = {
             data: books
         }
 
-        res.json(response)
+        res.send(response)
         
     }, 
     listUserSub: async (req, res) => {

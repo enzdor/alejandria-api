@@ -5,9 +5,11 @@ require('dotenv').config()
 
 const secretKey = `${process.env.SECRET_KEY}`
 
+
+const corsValues = ['http://localhost:3000', 'https://localhost:3000']
 const stripe = require('stripe')(secretKey.toString())
 app.use(express.json());
-app.use(cors(['http://localhost:3000', 'https://localhost:3000']))
+app.use(cors())
 
 
 app.listen(process.env.PORT ||3001, () => {

@@ -29,6 +29,10 @@ const calculateOrderAmounts = item => {
     return item.price * 100
 }
 
+app.get('/', (req, res) => {
+    res.send('hello')
+})
+
 app.post('/create-payment-intent', async (req, res) => {
     try {
         const { item, user } = req.body

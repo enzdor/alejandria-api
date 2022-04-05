@@ -194,8 +194,9 @@ module.exports = {
         if (req.query.priceMax === ''){
             req.query.priceMax = 1000000
         }
-        console.log('ass');
-        console.log(req.query);
+		if (req.query.genre === 'Genre'){
+			req.query.genre = ''
+		}
 
         const books = await db.Book.findAll({
             include: {all: true},

@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 
 module.exports = {
     list: async (req, res) => {
-        const books = await db.Book.findAll({include: {all: true}})
+		const books = await db.Book.findAll({where: {available: "true"},include: {all: true}})
 
         const response = {
             meta: {
@@ -18,7 +18,7 @@ module.exports = {
         
     }, 
     listUserSub: async (req, res) => {
-        const books = await db.Book.findAll({include: {all: true}})
+        const books = await db.Book.findAll({where: {available: "true"},include: {all: true}})
         const arrayBooks = []
 
         for (const book of books) {
@@ -48,7 +48,7 @@ module.exports = {
     },
     listCreatedSub: async (req, res) => {
         const books = await db.Book.findAll({
-            where: {user_sub: req.params.user_sub},
+			where: {user_sub: req.params.user_sub, available:"true"},
             include: {all: true}
         })
         const arrayBooks = []
@@ -134,8 +134,39 @@ module.exports = {
 
         
     },
-    detail: async (req, res) => {
-        const book = await db.Book.findByPk(req.params.id,
+	listSoldSub: async (req, res) => {
+	
+        const books = await db.Book.findAll({
+			where: {user_sub: req.params.user_sub, available: "false"},
+            include: {all: true}
+        })
+        const arrayBooks = []
+
+        for (const book of books) {
+            arrayBooks.push(book.dataValues)
+        }
+
+        for (const book of arrayBooks) {
+            book.isFavourite = false
+            for (let fav of book.favourite) {
+                if(fav.user_sub === req.params.user_sub){
+                    book.isFavourite = true
+                }
+            }
+        }
+
+        const response = {
+            meta: {
+                status: 200,
+                total: books.length,
+                url: "api/books",
+            },
+            data: arrayBooks
+        }
+
+        res.json(response)        
+	},
+    detail: async (req, res) => { const book = await db.Book.findByPk(req.params.id,
             { include: { all: true } }
         );
 
@@ -210,11 +241,10 @@ module.exports = {
                 name: { [Op.like]: "%" + req.query.name + "%" },
                 author: { [Op.like]: "%" + req.query.author + "%" },
                 genre_id: { [Op.like]: "%" + req.query.genre + "%" },
-                price: { [Op.between]: [ Number(req.query.priceMin), Number(req.query.priceMax)]}
+                price: { [Op.between]: [ Number(req.query.priceMin), Number(req.query.priceMax)]},
+				available: "true"
             }
         })
-
-        console.log(books);
 
         const response = {
             meta: {

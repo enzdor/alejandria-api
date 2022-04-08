@@ -5,6 +5,7 @@ require('dotenv').config()
 
 const secretKey = `${process.env.SECRET_KEY}`
 
+console.log(secretKey)
 
 const stripe = require('stripe')(secretKey.toString())
 app.use(express.json());
@@ -37,6 +38,7 @@ app.get('/', (req, res) => {
 app.post('/create-payment-intent', async (req, res) => {
     try {
         const { item, user } = req.body
+		console.log(secretKey)
 
         const paymentIntent = await stripe.paymentIntents.create({
             amount: calculateOrderAmounts(item),
